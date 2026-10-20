@@ -1,0 +1,34 @@
+name: Public Release Notes
+description: >-
+  Strip internal links (Shortcut by default) from release notes before they go
+  to a public repository, and fail if any internal link is left.
+
+inputs:
+  changes:
+    description: Release notes (markdown).
+    required: true
+  strip-pattern:
+    description: Extended regex (sed -E) removed from the notes.
+    required: false
+    default: '\[\[sc-[0-9]+\]\]\(https://app\.shortcut\.com/[^)]*\) ?'
+  forbid-pattern:
+    description: Extended regex (grep -Ei) that must not appear after stripping. Empty disables the check.
+    required: false
+    default: 'shortcut\.com'
+
+outputs:
+  changes:
+    description: The notes with internal links removed.
+    value: ${{ steps.strip.outputs.changes }}
+
+runs:
+  using: composite
+  steps:
+    - name: Remove internal links
+      id: strip
+      shell: bash
+      env:
+        CHANGES: ${{ inputs.changes }}
+        STRIP_PATTERN: ${{ inputs.strip-pattern }}
+        FORBID_PATTERN: ${{ inputs.forbid-pattern }}
+      run: bash "$GITHUB_ACTION_PATH/strip.sh"
