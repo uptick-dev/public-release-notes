@@ -3,7 +3,8 @@
 Strips internal links from release notes before they are published to a public
 repository, and fails if any are left. By default it removes the
 `[[sc-NNNN]](https://app.shortcut.com/...)` prefixes that `cliff.toml` adds to
-changelog lines, then fails on any remaining `shortcut.com` link.
+changelog lines, and the bare `[sc-NNNN]` tags that PR titles carry into the
+grouped headings, then fails on any remaining `shortcut.com` link or `[sc-N]` tag.
 
 Works alongside the changelog actions suite:
 `changelog-generate` → `changelog-merge` → `changelog-release` → `changelog-notify`.
@@ -33,8 +34,8 @@ Works alongside the changelog actions suite:
 | Name | Default | Description |
 | --- | --- | --- |
 | `changes` | _(required)_ | Release notes markdown. |
-| `strip-pattern` | Shortcut `[[sc-N]](...)` link | Extended regex (`sed -E`) removed from the notes. Must not contain `#`. |
-| `forbid-pattern` | `shortcut\.com` | Extended regex (`grep -Ei`) that fails the step if it still matches. Empty disables the check. |
+| `strip-pattern` | Shortcut `[[sc-N]](...)` links and bare `[sc-N]` tags | Extended regex (`sed -E`) removed from the notes. Must not contain `#`. |
+| `forbid-pattern` | `shortcut\.com\|\[sc-[0-9]+\]` | Extended regex (`grep -Ei`) that fails the step if it still matches. Empty disables the check. |
 
 ## Outputs
 

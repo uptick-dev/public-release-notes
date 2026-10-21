@@ -2,8 +2,8 @@
 # Runs strip.sh with the action's default patterns.
 set -uo pipefail
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
-STRIP='\[\[sc-[0-9]+\]\]\(https://app\.shortcut\.com/[^)]*\) ?'
-FORBID='shortcut\.com'
+STRIP='\[\[sc-[0-9]+\]\]\(https://app\.shortcut\.com/[^)]*\) ?|\[sc-[0-9]+\] ?'
+FORBID='shortcut\.com|\[sc-[0-9]+\]'
 fail=0
 
 run() {
@@ -21,6 +21,9 @@ check() {
 
 got="$(run '- [[sc-5973]](https://app.shortcut.com/ppx-digital/story/5973) Publish semver releases')"
 check "strips Shortcut links" "$got" "- Publish semver releases"
+
+got="$(run $'### ci: [sc-5974] Publish semver releases\n- Publish semver releases')"
+check "strips bare Shortcut tags in PR-title headings" "$got" $'### ci: Publish semver releases\n- Publish semver releases'
 
 got="$(run $'### 🐛 Fixed\n- Report the real version\n- 100% of offers')"
 check "leaves other notes alone" "$got" $'### 🐛 Fixed\n- Report the real version\n- 100% of offers'

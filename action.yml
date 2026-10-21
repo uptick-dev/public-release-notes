@@ -10,11 +10,11 @@ inputs:
   strip-pattern:
     description: Extended regex (sed -E) removed from the notes.
     required: false
-    default: '\[\[sc-[0-9]+\]\]\(https://app\.shortcut\.com/[^)]*\) ?'
+    default: '\[\[sc-[0-9]+\]\]\(https://app\.shortcut\.com/[^)]*\) ?|\[sc-[0-9]+\] ?'
   forbid-pattern:
     description: Extended regex (grep -Ei) that must not appear after stripping. Empty disables the check.
     required: false
-    default: 'shortcut\.com'
+    default: 'shortcut\.com|\[sc-[0-9]+\]'
 
 outputs:
   changes:
